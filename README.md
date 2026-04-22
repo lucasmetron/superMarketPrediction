@@ -16,7 +16,7 @@ Esta é uma aplicação web focada em experiência do usuário e análise de dad
 - **Tracking:** Rastreamento de cliques e persistência de dados via `sessionStorage`.
 
 ## 🛠️ Estrutura de Arquivos
-```bash
+
 ├── 📁 controller/   # Lógica de conexão entre View e Service
 ├── 📁 data/         # Arquivos JSON (Usuários e Produtos)
 ├── 📁 service/      # Regras de negócio e manipulação de dados
@@ -25,26 +25,20 @@ Esta é uma aplicação web focada em experiência do usuário e análise de dad
 └── 📄 index.js      # Ponto de entrada da aplicação
 
 ## 🚀 Como Executar
-```bash
 1. Pré-requisitos
 Certifique-se de estar usando a versão estável do Node.js:
 
-```bash
 nvm install 22.13.1
 nvm use 22.13.1
 
 ## 2. Instalação
 Utilize o comando ci para uma instalação limpa e fiel ao package-lock.json:
-
-```bash
 npm ci
 
 ## 3. Iniciar Aplicação
-```bash
 npm start
 Acesse no seu navegador: http://localhost:3000
 
 Nota para Windows: O comando de start foi otimizado para evitar erros de sintaxe no PowerShell ao monitorar arquivos JSON e JS.
-
 
 Desenvolvido como projeto de estudo em SuperMarket Prediction.
