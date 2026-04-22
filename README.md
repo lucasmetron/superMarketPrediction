@@ -17,12 +17,12 @@ Esta é uma aplicação web focada em experiência do usuário e análise de dad
 
 ## 🛠️ Estrutura de Arquivos
 
-├── 📁 controller/   # Lógica de conexão entre View e Service
-├── 📁 data/         # Arquivos JSON (Usuários e Produtos)
-├── 📁 service/      # Regras de negócio e manipulação de dados
-├── 📁 view/         # Classes de gerenciamento do DOM e templates
-├── 📄 index.html    # Interface principal
-└── 📄 index.js      # Ponto de entrada da aplicação
+- 📁 controller/   # Lógica de conexão entre View e Service
+- 📁 data/         # Arquivos JSON (Usuários e Produtos)
+- 📁 service/      # Regras de negócio e manipulação de dados
+- 📁 view/         # Classes de gerenciamento do DOM e templates
+- 📄 index.html    # Interface principal
+- 📄 index.js      # Ponto de entrada da aplicação
 
 ## 🚀 Como Executar
 1. Pré-requisitos
@@ -40,5 +40,6 @@ npm start
 Acesse no seu navegador: http://localhost:3000
 
 Nota para Windows: O comando de start foi otimizado para evitar erros de sintaxe no PowerShell ao monitorar arquivos JSON e JS.
+
 
 Desenvolvido como projeto de estudo em SuperMarket Prediction.
