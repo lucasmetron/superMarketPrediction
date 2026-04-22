@@ -24,30 +24,27 @@ Esta é uma aplicação web focada em experiência do usuário e análise de dad
 ├── 📄 index.html    # Interface principal
 └── 📄 index.js      # Ponto de entrada da aplicação
 
-🚀 Como Executar
+## 🚀 Como Executar
+```bash
 1. Pré-requisitos
 Certifique-se de estar usando a versão estável do Node.js:
 
-Bash
+```bash
 nvm install 22.13.1
 nvm use 22.13.1
-2. Instalação
+
+## 2. Instalação
 Utilize o comando ci para uma instalação limpa e fiel ao package-lock.json:
 
-Bash
+```bash
 npm ci
-3. Iniciar Aplicação
-Bash
+
+## 3. Iniciar Aplicação
+```bash
 npm start
 Acesse no seu navegador: http://localhost:3000
 
 Nota para Windows: O comando de start foi otimizado para evitar erros de sintaxe no PowerShell ao monitorar arquivos JSON e JS.
 
-🔮 Futuras Implementações (Roadmap)
-[ ] Implementação do motor de recomendação com TensorFlow.js.
-
-[ ] Análise de similaridade entre usuários (Collaborative Filtering).
-
-[ ] Sugestões personalizadas baseadas no histórico de compras.
 
 Desenvolvido como projeto de estudo em SuperMarket Prediction.
