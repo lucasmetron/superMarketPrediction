@@ -132,7 +132,7 @@ function createTraningData(context) {
     context.products.forEach((product) => {
       const productVector = encodeProduct(product, context).dataSync();
       const label = user.purchases.some((p) => p.name === product.name) ? 1 : 0;
-      inputs.push({ ...userVector, ...productVector });
+      inputs.push([...userVector, ...productVector]);
       labels.push(label);
     });
   });
