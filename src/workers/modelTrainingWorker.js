@@ -3,6 +3,7 @@ import { workerEvents } from "../events/constants.js";
 
 console.log("Model training worker initialized");
 let _globalCtx = {};
+let _model = {};
 
 const WEIGHTS = {
   category: 0.4,
@@ -127,21 +128,83 @@ function createTraningData(context) {
   const inputs = [];
   const labels = [];
 
-  context.users.forEach((user) => {
-    const userVector = encodeUser(user, context).dataSync();
-    context.products.forEach((product) => {
-      const productVector = encodeProduct(product, context).dataSync();
-      const label = user.purchases.some((p) => p.name === product.name) ? 1 : 0;
-      inputs.push([...userVector, ...productVector]);
-      labels.push(label);
+  context.users
+    .filter((u) => u.purchases.length)
+    .forEach((user) => {
+      const userVector = encodeUser(user, context).dataSync();
+      context.products.forEach((product) => {
+        const productVector = encodeProduct(product, context).dataSync();
+        const label = user.purchases.some((p) => p.name === product.name)
+          ? 1
+          : 0;
+        inputs.push([...userVector, ...productVector]);
+        labels.push(label);
+      });
     });
-  });
 
   return {
     xs: tf.tensor2d(inputs),
     ys: tf.tensor2d(labels, [labels.length, 1]),
     inputDimension: context.dimentions * 2,
   };
+}
+
+async function configureNeuralNetAndTrain(trainData) {
+  const model = tf.sequential();
+
+  // Camada de entrada + primeira camada oculta
+  model.add(
+    tf.layers.dense({
+      inputShape: [trainData.inputDimension],
+      units: 128,
+      activation: "relu",
+    }),
+  );
+
+  // Segunda camada oculta (ajuda a modelar interações mais complexas entre as características)
+  model.add(
+    tf.layers.dense({
+      units: 64,
+      activation: "relu",
+    }),
+  );
+
+  // Terceira camada oculta (ajuda a modelar interações ainda mais complexas e extrair características de alto nível)
+  model.add(
+    tf.layers.dense({
+      units: 32,
+      activation: "relu",
+    }),
+  );
+
+  model.add(
+    tf.layers.dense({
+      units: 1, // Saída única representando a probabilidade de compra
+      activation: "sigmoid", // Para saída entre 0 e 1, representando a probabilidade de compra
+    }),
+  );
+
+  model.compile({
+    optimizer: tf.train.adam(0.01), // Otimizador Adam com taxa de aprendizado de 0.001
+    loss: "binaryCrossentropy", // Função de perda para classificação binária
+    metrics: ["accuracy"], // Métrica de acurácia para avaliar o desempenho do modelo
+  });
+
+  await model.fit(trainData.xs, trainData.ys, {
+    epochs: 100, // Número de épocas para treinamento
+    batchSize: 32, // Tamanho do lote para treinamento
+    shuffle: true, // Embaralhar os dados a cada época para melhorar a generalização
+    callbacks: {
+      onEpochEnd: (epoch, logs) => {
+        postMessage({
+          type: workerEvents.trainingLog,
+          epoch: epoch,
+          loss: logs.loss,
+          accuracy: logs.acc,
+        });
+      },
+    },
+  });
 }
 
 async function trainModel({ users }) {
@@ -162,25 +225,13 @@ async function trainModel({ users }) {
 
   const trainingData = createTraningData(context);
 
-  debugger;
+  _model = await configureNeuralNetAndTrain(trainingData);
+
   postMessage({
     type: workerEvents.progressUpdate,
-    progress: { progress: 50 },
+    progress: { progress: 100 },
   });
-  postMessage({
-    type: workerEvents.trainingLog,
-    epoch: 1,
-    loss: 1,
-    accuracy: 1,
-  });
-
-  setTimeout(() => {
-    postMessage({
-      type: workerEvents.progressUpdate,
-      progress: { progress: 100 },
-    });
-    postMessage({ type: workerEvents.trainingComplete });
-  }, 1000);
+  postMessage({ type: workerEvents.trainingComplete });
 }
 function recommend(user, ctx) {
   console.log("will recommend for user:", user);
